@@ -10,7 +10,7 @@ class Gender(str, Enum):
     FEMALE = "female"
 
 
-class Guests(TimeStampMixin, table=True):
+class Invitees(TimeStampMixin, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(max_length=255)
     last_name: str = Field(max_length=255)
@@ -19,5 +19,5 @@ class Guests(TimeStampMixin, table=True):
     phone_number: str = Field(max_length=255)
     address: Optional[str] = Field(max_length=255)
 
-    user:  Optional["Users"] = Relationship(back_populates="guest")
+    user:  Optional["Users"] = Relationship(back_populates="invite")
 

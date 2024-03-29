@@ -2,7 +2,6 @@ import datetime
 from datetime import date
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
-from .guests import GuestsResponseSchema
 
 class UsersSchema(BaseModel):
     email: EmailStr = Field(max_length=255)
@@ -23,7 +22,7 @@ class UsersResponseSchema(UsersSchema):
     id: int
     email: EmailStr
     is_active: bool
-    guest: Optional[GuestsResponseSchema]
+    guest: Optional["InviteesResponseSchema"]
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
