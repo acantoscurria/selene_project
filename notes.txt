@@ -1,0 +1,5 @@
+# quitar la carpeta de version de gitignore (.empty) - Done
+# CORS origin *                                        - Done
+# global mixins modelos (ejemplo descuentos)           - Done
+# entrypoint , docker y configuraciones de descuentos
+# agregar login basandose en descuentos (verificar nuevos requerimientos)
