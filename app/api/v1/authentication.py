@@ -7,14 +7,14 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
+from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
+
+
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
 class TokenResponseSchema(BaseModel):
     access_token: str

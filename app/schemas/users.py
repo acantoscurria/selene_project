@@ -5,14 +5,14 @@ from pydantic import BaseModel, EmailStr, Field
 
 class UsersSchema(BaseModel):
     email: EmailStr = Field(max_length=255)
-    password: str = Field(max_length=255)
 
 
     class Config:
         from_attributes = True
 
 class UsersCreateSchema(UsersSchema):
-    pass
+    password: str = Field(max_length=255)
+    invite_id: Optional[int] = Field(default=None)
 
 class UserLoginSchema(UsersSchema):
     pass
@@ -22,7 +22,6 @@ class UsersResponseSchema(UsersSchema):
     id: int
     email: EmailStr
     is_active: bool
-    guest: Optional["InviteesResponseSchema"]
     created_at: datetime.datetime
     updated_at: datetime.datetime
 

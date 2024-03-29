@@ -59,8 +59,14 @@ async def login(
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=UsersResponseSchema)
 def create_user(user: UsersCreateSchema, db: Session = Depends(get_session)):
     logger.info(f"Creating user with data: {user.model_dump()}")
+    user_exists = db.exec(select(Users).where(Users.email == user.email)).first()
+    if user_exists:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="User already exists"
+        )
     user_data = user.model_dump()
     db_user = Users(**user_data)
+    db_user.hash_password()
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

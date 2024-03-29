@@ -9,23 +9,23 @@ class Gender(str, Enum):
     MALE = "male"
     FEMALE = "female"
 
-class InviteesSchema(BaseModel):
+class InvitesSchema(BaseModel):
     name: str = Field(max_length=255)
     last_name: str = Field(max_length=255)
-    gender: Optional[Gender] = Field()
-    birth_date: Optional[date] = Field()
-    address: Optional[str] = Field(max_length=255)
+    dni: int = Field()
+    gender: Optional[Gender]
+    birth_date: Optional[date] = Field(default=None)
+    address: Optional[str] = Field(default=None)
 
-class InviteesCreateSchema(InviteesSchema):
-    user_id: int
+class InvitesCreateSchema(InvitesSchema):
     phone_number: str = Field(max_length=255)
 
 
-class InviteesResponseSchema(InviteesSchema):
+class InvitesResponseSchema(InvitesSchema):
     user: Optional["UsersResponseSchema"]
     photo: Optional[str]
 
-class InviteesUpdateSchema(InviteesSchema):
+class InvitesUpdateSchema(InvitesSchema):
     name: Optional[str] = Field(max_length=255)
     last_name: Optional[str] = Field(max_length=255)
     birth_date: Optional[date] = Field()
@@ -33,5 +33,5 @@ class InviteesUpdateSchema(InviteesSchema):
     phone_number: Optional[str] = Field(max_length=255)
 
 
-class InviteesUpdatePhoto(BaseModel):
+class InvitesUpdatePhoto(BaseModel):
     photo: str = Field(max_length=255)

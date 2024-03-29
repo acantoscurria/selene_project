@@ -5,11 +5,11 @@ router = APIRouter()
 
 from .import (
     #agregar aqui mas rutas
-    invitees,
+    invites,
     users,
     )
 
 
 router.include_router(users.router, prefix="/users", tags=["Users"])
-router.include_router(invitees.router, prefix="/invitees", tags=["Invitees"])
+router.include_router(invites.router, prefix="/invites", tags=["Invites"])
 
