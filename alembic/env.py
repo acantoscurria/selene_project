@@ -11,8 +11,8 @@ from app.core.database import database
 from alembic import context
 
 from sqlmodel import SQLModel
-from app.models.addresses import Address
-from app.models.users import User
+from app.models.users import Users
+from app.models.guests import Guests
 from app.models.global_mixins.timestamp_mixins import TimeStampMixin
 
 

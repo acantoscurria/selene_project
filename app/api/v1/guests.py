@@ -31,58 +31,58 @@ def create_guest(guest: GuestsCreateSchema, db: Session = Depends(get_session)):
     logger.info(f"guest created with ID: {db_guest.id}, and values: {db_guest}")
     return db_guest
 
-@router.get("/{user_id}", response_model=UsersResponseSchema)
-def get_user(user_id: int, db: Session = Depends(get_session)):
-    logger.info(f"Getting user with ID: {user_id}")
+@router.get("/{guest_id}", response_model=GuestsResponseSchema)
+def get_user(guest_id: int, db: Session = Depends(get_session)):
+    logger.info(f"Getting guest with ID: {guest_id}")
     
-    statement = select(Users).where(
-        Users.id == user_id,
-        Users.is_active == True,
+    statement = select(Guests).where(
+        Guests.id == guest_id,
+        Guests.is_active == True,
         )
     result = db.exec(statement)
-    db_user = result.first()
-    logger.info(f"Getting user data: {db_user}")
-    if not db_user:
-        logger.error(f"User with ID: {user_id} not found")
+    db_guest = result.first()
+    logger.info(f"Getting guest data: {db_guest}")
+    if not db_guest:
+        logger.error(f"guest with ID: {guest_id} not found")
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="guest not found"
         )
-    return db_user
+    return db_guest
 
 
-@router.get("/", response_model=list[UsersResponseSchema])
-def get_users(db: Session = Depends(get_session)):
-    statement = select(Users).where(Users.is_active == True)
+@router.get("/", response_model=list[GuestsResponseSchema])
+def get_guest(db: Session = Depends(get_session)):
+    statement = select(Guests).where(Guests.is_active == True)
     result = db.exec(statement)
-    db_users = result.all()
-    return db_users
+    db_guest = result.all()
+    return db_guest
 
 
-@router.patch("/{user_id}", response_model=UsersResponseSchema)
-def update_user(user_id: int, user: UserUpdateSchema, db: Session = Depends(get_session)):
-    statement = select(Users).where(Users.id == user_id)
+@router.patch("/{guest_id}", response_model=GuestsResponseSchema)
+def update_guest(guest_id: int, guest: GuestsUpdateSchema, db: Session = Depends(get_session)):
+    statement = select(Guests).where(Guests.id == guest_id)
     result = db.exec(statement)
-    db_user = result.first()
-    if not db_user:
+    db_guest = result.first()
+    if not db_guest:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Guest not found"
         )
-    update_data = user.model_dump(exclude_unset=True)
-    db_user.sqlmodel_update(update_data)
+    update_data = guest.model_dump(exclude_unset=True)
+    db_guest.sqlmodel_update(update_data)
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(db_guest)
+    return db_guest
 
 
-@router.delete("/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_session)):
-    statement = select(Users).where(Users.id == user_id)
+@router.delete("/{guest_id}")
+def delete_guest(guest_id: int, db: Session = Depends(get_session)):
+    statement = select(Guests).where(Guests.id == guest_id)
     result = db.exec(statement)
-    db_user = result.first()
-    if not db_user:
+    db_guest = result.first()
+    if not db_guest:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Guest not found"
         )
-    db.delete(db_user)
+    db.delete(db_guest)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
