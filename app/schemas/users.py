@@ -3,59 +3,49 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
-from app.models.users import User
 
 class Gender(str, Enum):
     MALE = "male"
     FEMALE = "female"
 
-class Address(BaseModel):
-    street_name: str
-    street_number: int
-    floor: Optional[int] = None
-    apartment: Optional[str] = None
-    zip_code: int
-    neighborhood: str
-    city: str
-    country: str
-    additional_info: Optional[str] = None
-
-class UserCreate(BaseModel):
-    cuit: str
-    name: str
+class UsersSchema(BaseModel):
     email: EmailStr = Field(max_length=255)
     password: str = Field(max_length=255)
-    birthdate: date
-    gender: Gender
-    address: Address
+
 
     class Config:
         from_attributes = True
 
-class UserLoginSchema(BaseModel):
-    email: EmailStr = Field(max_length=255)
-    password: str = Field(max_length=255)
+class UsersCreateSchema(UsersSchema):
+    pass
 
-class UsersResponseSchema(UserCreate):
+class UserLoginSchema(UsersSchema):
+    pass
+
+
+class UsersResponseSchema(UsersSchema):
     id: int
+    email: EmailStr
+    is_active: bool
+    guest: Optional["GuestsSchema"]
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
-class UserRead(BaseModel):
-    cuit: str
-    name: str
-    birthdate: date
-    gender: Gender
-    address: Address
 
-    class Config:
-        from_attributes = True
+class UserUpdateSchema(BaseModel):
+    password: str = Field(max_length=255)
 
 
-class UserUpdate(BaseModel):
-    name: Optional[str] =None
-    birthdate: Optional[date] = None
-    gender: Optional[Gender] = None
+class UserUpdatePhoto(BaseModel):
+    photo: str = Field(max_length=255)
 
-    class Config:
-        from_attributes = True
+
+
+class GuestsSchema(BaseModel):
+    name: str = Field(max_length=255)
+    last_name: str = Field(max_length=255)
+    gender: Optional[Gender] = Field()
+    birth_date: Optional[date] = Field()
+    phone_number: str = Field(max_length=255)
+    address: Optional[str] = Field(max_length=255)
+

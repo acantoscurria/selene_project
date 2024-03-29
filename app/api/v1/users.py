@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlmodel import Session, select
 from app.api.v1.authentication import ACCESS_TOKEN_EXPIRE_MINUTES, TokenResponseSchema, create_access_token, verify_password
 from app.models.users import Users
-from app.schemas.users import UserCreate, UserRead, UserUpdate, UserLoginSchema, UsersResponseSchema
+from app.schemas.users import UsersCreateSchema, UserUpdateSchema, UserLoginSchema, UsersResponseSchema
 from app.core.database import get_session
 from fastapi import Body
 
@@ -38,8 +38,7 @@ async def login(
 
     user = select(Users).where(
         Users.email == email,
-        Users.enabled == True,
-        Users.deleted == False,
+        Users.is_active == True,
     )
     user = db.exec(user).first()
 
@@ -57,8 +56,8 @@ async def login(
         "token_type": "bearer",
     }
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=UserRead)
-def create_user(user: UserCreate, db: Session = Depends(get_session)):
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=UsersResponseSchema)
+def create_user(user: UsersCreateSchema, db: Session = Depends(get_session)):
     logger.info(f"Creating user with data: {user.model_dump()}")
     user_data = user.model_dump()
     db_user = Users(**user_data)
@@ -68,11 +67,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_session)):
     logger.info(f"User created with ID: {db_user.id}, and values: {db_user}")
     return db_user
 
-@router.get("/{user_id}", response_model=UserRead)
+@router.get("/{user_id}", response_model=UsersResponseSchema)
 def get_user(user_id: int, db: Session = Depends(get_session)):
     logger.info(f"Getting user with ID: {user_id}")
     
-    statement = select(Users).where(Users.id == user_id)
+    statement = select(Users).where(
+        Users.id == user_id,
+        Users.is_active == True,
+        )
     result = db.exec(statement)
     db_user = result.first()
     logger.info(f"Getting user data: {db_user}")
@@ -84,16 +86,16 @@ def get_user(user_id: int, db: Session = Depends(get_session)):
     return db_user
 
 
-@router.get("/", response_model=list[UserRead])
+@router.get("/", response_model=list[UsersResponseSchema])
 def get_users(db: Session = Depends(get_session)):
-    statement = select(Users)
+    statement = select(Users).where(Users.is_active == True)
     result = db.exec(statement)
     db_users = result.all()
     return db_users
 
 
-@router.patch("/{user_id}", response_model=UserRead)
-def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_session)):
+@router.patch("/{user_id}", response_model=UsersResponseSchema)
+def update_user(user_id: int, user: UserUpdateSchema, db: Session = Depends(get_session)):
     statement = select(Users).where(Users.id == user_id)
     result = db.exec(statement)
     db_user = result.first()

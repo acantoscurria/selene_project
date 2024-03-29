@@ -18,7 +18,8 @@ class Users(TimeStampMixin, table=True):
     password: str = Field(max_length=255)
     is_active: bool = Field(default=True)
     is_admin: bool = Field(default=False)
-    
+    guest_id: Optional[int] = Field(default=None, foreign_key="guest.id")
+
     guest: "Guests" = Relationship(back_populates="user")
 
     def hash_password(self):
@@ -34,7 +35,6 @@ class Guests(TimeStampMixin, table=True):
     birth_date: Optional[date] = Field()
     phone_number: str = Field(max_length=255)
     address: Optional[str] = Field(max_length=255)
-    user_id: int = Field(foreign_key="user.id")
 
-    user: Users = Relationship(back_populates="guests")
+    user:  Optional[Users] = Relationship(back_populates="guest")
 

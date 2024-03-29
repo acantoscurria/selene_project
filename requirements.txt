@@ -35,4 +35,5 @@ starlette==0.36.3
 typing_extensions==4.10.0
 uvicorn==0.27.1
 passlib[bcrypt]
-
+python-jose[cryptography]
+email-validator

@@ -6,7 +6,7 @@ load_dotenv()
 
 DEBUG = os.getenv("DEBUG", default=True)
 DATABASE_URL = os.getenv("DATABASE_URL")
-PROJECT_NAME: str = "Fastapi Template"
+PROJECT_NAME: str = "Selene Project"
 
 
 PROJECT_VERSION: str = "0.0.0"
