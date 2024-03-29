@@ -1,12 +1,8 @@
 import datetime
 from datetime import date
-from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
-
-class Gender(str, Enum):
-    MALE = "male"
-    FEMALE = "female"
+from .guests import GuestsResponseSchema
 
 class UsersSchema(BaseModel):
     email: EmailStr = Field(max_length=255)
@@ -27,7 +23,7 @@ class UsersResponseSchema(UsersSchema):
     id: int
     email: EmailStr
     is_active: bool
-    guest: Optional["GuestsSchema"]
+    guest: Optional[GuestsResponseSchema]
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
@@ -36,16 +32,7 @@ class UserUpdateSchema(BaseModel):
     password: str = Field(max_length=255)
 
 
-class UserUpdatePhoto(BaseModel):
-    photo: str = Field(max_length=255)
 
 
 
-class GuestsSchema(BaseModel):
-    name: str = Field(max_length=255)
-    last_name: str = Field(max_length=255)
-    gender: Optional[Gender] = Field()
-    birth_date: Optional[date] = Field()
-    phone_number: str = Field(max_length=255)
-    address: Optional[str] = Field(max_length=255)
 
