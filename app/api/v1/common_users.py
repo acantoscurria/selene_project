@@ -4,6 +4,7 @@ from sqlmodel import Session, select
 from app.api.v1.authentication import token_decode
 from app.models.invites import Invites
 from app.models.users import Users
+from app.schemas.common_users import CommonUserResponseSchema
 from app.schemas.invites import InvitesByDniSchema, InvitesResponseSchema, InvitesCreateSchema, InvitesUpdateSchema
 from app.core.database import get_session
 from fastapi import Body
@@ -28,16 +29,25 @@ def create_user(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="El usuario ya existe"
         )
-    invite_exists = db.exec(select(Invites).where(Invites.id == new_user.invite_id)).first()
+    
+    statement = select(Invites)
 
-    if invite_exists.user:
+    invite_exists=db.exec(statement.where(Invites.dni == new_user.dni)).first()
+
+    if not invite_exists:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Invitado no encontrado"
+        )
+    elif invite_exists.user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="El usuario ya está registrado"
         )
 
+
     user_data = new_user.model_dump()
     db_user = Users(**user_data)
     db_user.hash_password()
+    db_user.invite = invite_exists
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -45,22 +55,8 @@ def create_user(
     return db_user
 
 
-@router.get("/invite_by_dni/{dni_invite}",response_model=InvitesByDniSchema)
-def get_invite_by_dni(
-    dni_invite: str,
-    db: Session = Depends(get_session)
-    ):
-    statement = select(Invites).where(Invites.dni == dni_invite)
-    result = db.exec(statement)
-    db_invite = result.first()
-    if not db_invite:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Invitado no encontrado"
-        )
-    return db_invite
 
-
-@router.get("/get_info_user", response_model=UsersResponseSchema)
+@router.get("/get_info_user", response_model=CommonUserResponseSchema)
 def get_info_user(
     user = Security(token_decode,scopes=["invite"]),
     db: Session = Depends(get_session)

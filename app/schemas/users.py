@@ -12,7 +12,7 @@ class UsersSchema(BaseModel):
 
 class UsersCreateSchema(UsersSchema):
     password: str = Field(max_length=255)
-    invite_id:int = Field(default=None)
+    dni: int = Field()
 
 
 class UsersAdminCreateSchema(UsersSchema):
