@@ -37,17 +37,9 @@ async def create_post(
     with open(file_path, "wb") as buffer:
         buffer.write(file.file.read())
 
-    
     db_post = Posts(**post_data, user_id=user.get("sub"), file_path=file_path)
     db.add(db_post)
     db.commit()
     db.refresh(db_post)
     return db_post
 
-
-@router.post("/uploadfile/")
-async def create_upload_file(
-    file: UploadFile,
-    text: str = Form()
-    ):
-    return {"filename": file.filename}

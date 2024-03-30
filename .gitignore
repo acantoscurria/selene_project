@@ -220,4 +220,4 @@ $RECYCLE.BIN/
 
 # ###### Custom #####
 static/*
-!static/__init__.py
+!/static/empty
