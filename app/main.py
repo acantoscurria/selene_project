@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from app.api.v1.routers import router as api_v1_router
 from dotenv import load_dotenv
 from app.core import config
@@ -13,6 +14,8 @@ app = FastAPI(
     title=config.PROJECT_NAME,
     version=config.PROJECT_VERSION,
 )
+
+app.mount("/static", StaticFiles(directory=config.STATIC_DIRECTORY), name="static")
 
 
 @app.get("/", response_class=HTMLResponse)

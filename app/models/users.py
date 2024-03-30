@@ -25,6 +25,8 @@ class Users(TimeStampMixin, table=True):
     invite_id: Optional[int] = Field(default=None, foreign_key="invites.id")
     invite: Optional["Invites"] = Relationship(back_populates="user")
 
+    posts: Optional[list["Posts"]] = Relationship(back_populates="user")
+
     def hash_password(self):
         hashed_password = get_password_hash(self.password)
         self.password = hashed_password

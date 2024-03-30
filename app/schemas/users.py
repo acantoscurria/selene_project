@@ -3,6 +3,7 @@ from datetime import date
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
+
 class UsersSchema(BaseModel):
     email: EmailStr = Field(max_length=255)
 
@@ -28,6 +29,11 @@ class UsersResponseSchema(UsersSchema):
     is_active: bool
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+
+class UserPostSchema(BaseModel):
+    email: EmailStr
+    invite: "InvitesResponseSchema"
 
 
 class UserUpdateSchema(BaseModel):

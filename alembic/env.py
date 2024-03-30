@@ -13,6 +13,7 @@ from alembic import context
 from sqlmodel import SQLModel
 from app.models.users import Users
 from app.models.invites import Invites
+from app.models.posts import Posts
 from app.models.global_mixins.timestamp_mixins import TimeStampMixin
 
 
