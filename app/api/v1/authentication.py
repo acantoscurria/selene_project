@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
@@ -20,6 +20,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class TokenResponseSchema(BaseModel):
     access_token: str
     token_type: str
+
+class TokenData(BaseModel):
+    username: str | None = None
+    scopes: list[str] = []
 
 
 def verify_password(plain_password, hashed_password):
@@ -46,13 +50,21 @@ def create_access_token(data: dict, expires_delta: float = ACCESS_TOKEN_EXPIRE_M
 
 
 
-async def token_decode(token: Annotated[str, Depends(oauth2_scheme)]):
+async def token_decode(
+        token: Annotated[str, Depends(oauth2_scheme)],
+        security_scopes: SecurityScopes
+        ):
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    if security_scopes.scopes:
+        authenticate_value = f'Bearer scope="{security_scopes.scope_str}"'
+    else:
+        authenticate_value = "Bearer"
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         if payload is {}:
@@ -60,13 +72,15 @@ async def token_decode(token: Annotated[str, Depends(oauth2_scheme)]):
 
     except JWTError:
         raise credentials_exception
+    
+    token_data = TokenData(scopes=payload.get("scopes", []), username=payload.get("sub"))
 
-
+    for scope in security_scopes.scopes:
+        if scope not in token_data.scopes:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="No tienes suficientes permisos",
+                headers={"WWW-Authenticate": authenticate_value},
+            )
     return payload 
 
-
-async def is_admin(user_id:int,db:Session):
-    user = db.exec(select("Users").where("Users.id" == user_id, "Users.is_admin"== True)).first()
-    print(f"*****************{user}")
-    if not user.is_admin :
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not admin")

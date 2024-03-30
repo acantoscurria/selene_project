@@ -1,12 +1,14 @@
 from datetime import timedelta
 import logging
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import APIRouter, Depends, HTTPException, Security, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
-from app.api.v1.authentication import ACCESS_TOKEN_EXPIRE_MINUTES, TokenResponseSchema, create_access_token, verify_password
+from app.api.v1.authentication import ACCESS_TOKEN_EXPIRE_MINUTES, TokenResponseSchema, create_access_token, token_decode, verify_password
+from app.core.config import DEBUG
+from app.models.invites import Invites
 from app.models.users import Users
-from app.schemas.users import UsersCreateSchema, UserUpdateSchema, UserLoginSchema, UsersResponseSchema
+from app.schemas.users import UsersAdminCreateSchema, UsersCreateSchema, UserUpdateSchema, UserLoginSchema, UsersResponseSchema
 from app.core.database import get_session
 from fastapi import Body
 
@@ -41,25 +43,32 @@ async def login(
         raise credentials_exception
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
+    if user.is_admin:
+        scope= "admin"
+    else:
+        scope= "invite"
+
     access_token = create_access_token(
-        data={"sub": str(user.id),"is_admin":user.is_admin}, expires_delta=access_token_expires
+        data={"sub": str(user.id),"scopes":[scope]}, expires_delta=access_token_expires
     )
     return {
         "access_token": access_token,
         "token_type": "bearer",
     }
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=UsersResponseSchema)
-def create_user(user: UsersCreateSchema, db: Session = Depends(get_session)):
-    logger.info(f"Creating user with data: {user.model_dump()}")
-    user_exists = db.exec(select(Users).where(Users.email == user.email)).first()
-    if user_exists:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="User already exists"
-        )
-    user_data = user.model_dump()
+
+@router.post("/admin_user", status_code=status.HTTP_201_CREATED, response_model=UsersResponseSchema)
+def create_admin_user(
+    new_user: UsersAdminCreateSchema,
+    db: Session = Depends(get_session)
+    ):
+    logger.info(f"Creating admin user with data: {new_user.model_dump()}")
+
+    user_data = new_user.model_dump()
     db_user = Users(**user_data)
     db_user.hash_password()
+    db_user.is_admin = True
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -67,7 +76,10 @@ def create_user(user: UsersCreateSchema, db: Session = Depends(get_session)):
     return db_user
 
 @router.get("/{user_id}", response_model=UsersResponseSchema)
-def get_user(user_id: int, db: Session = Depends(get_session)):
+def get_user(
+    user_id: int, 
+    user = Security(token_decode,scopes=["admin"]),
+    db: Session = Depends(get_session)):
     logger.info(f"Getting user with ID: {user_id}")
     
     statement = select(Users).where(
@@ -86,7 +98,10 @@ def get_user(user_id: int, db: Session = Depends(get_session)):
 
 
 @router.get("/", response_model=list[UsersResponseSchema])
-def get_users(db: Session = Depends(get_session)):
+def get_users(
+        user = Security(token_decode,scopes=["admin"]),
+        db: Session = Depends(get_session)
+    ):
     statement = select(Users).where(Users.is_active == True)
     result = db.exec(statement)
     db_users = result.all()
@@ -94,7 +109,11 @@ def get_users(db: Session = Depends(get_session)):
 
 
 @router.patch("/{user_id}", response_model=UsersResponseSchema)
-def update_user(user_id: int, user: UserUpdateSchema, db: Session = Depends(get_session)):
+def update_user(
+    user_id: int,
+    user_data: UserUpdateSchema, 
+    user = Security(token_decode,scopes=["admin"]),
+    db: Session = Depends(get_session)):
     statement = select(Users).where(Users.id == user_id)
     result = db.exec(statement)
     db_user = result.first()
@@ -102,15 +121,21 @@ def update_user(user_id: int, user: UserUpdateSchema, db: Session = Depends(get_
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
-    update_data = user.model_dump(exclude_unset=True)
+    update_data = user_data.model_dump(exclude_unset=True)
     db_user.sqlmodel_update(update_data)
+    if db_user.password:
+        db_user.hash_password()
     db.commit()
     db.refresh(db_user)
     return db_user
 
 
 @router.delete("/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_session)):
+def delete_user(
+    user_id: int,
+    user = Security(token_decode,scopes=["admin"]),
+    db: Session = Depends(get_session)
+    ):
     statement = select(Users).where(Users.id == user_id)
     result = db.exec(statement)
     db_user = result.first()

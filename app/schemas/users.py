@@ -12,7 +12,11 @@ class UsersSchema(BaseModel):
 
 class UsersCreateSchema(UsersSchema):
     password: str = Field(max_length=255)
-    invite_id: Optional[int] = Field(default=None)
+    invite_id:int = Field(default=None)
+
+
+class UsersAdminCreateSchema(UsersSchema):
+    password : str
 
 class UserLoginSchema(UsersSchema):
     pass
@@ -27,7 +31,10 @@ class UsersResponseSchema(UsersSchema):
 
 
 class UserUpdateSchema(BaseModel):
-    password: str = Field(max_length=255)
+    email: Optional[EmailStr] = Field(max_length=255,default=None)
+    is_active: Optional[bool] = Field(default=True)
+    is_admin: Optional[bool] = Field(default=False)
+    password: Optional[str] = Field(max_length=255,default=None)
 
 
 
