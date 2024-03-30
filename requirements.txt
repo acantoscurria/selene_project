@@ -38,3 +38,4 @@ passlib[bcrypt]
 python-jose[cryptography]
 email-validator
 fastapi-pagination
+python-multipart

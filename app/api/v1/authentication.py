@@ -7,12 +7,13 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
+from sqlmodel import Session, select
 from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 
 
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/users/token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -54,12 +55,18 @@ async def token_decode(token: Annotated[str, Depends(oauth2_scheme)]):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        if payload is {}:
             raise credentials_exception
 
     except JWTError:
         raise credentials_exception
 
 
-    return username 
+    return payload 
+
+
+async def is_admin(user_id:int,db:Session):
+    user = db.exec(select("Users").where("Users.id" == user_id, "Users.is_admin"== True)).first()
+    print(f"*****************{user}")
+    if not user.is_admin :
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not admin")

@@ -2,6 +2,7 @@ from datetime import timedelta
 import logging
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from app.api.v1.authentication import ACCESS_TOKEN_EXPIRE_MINUTES, TokenResponseSchema, create_access_token, verify_password
 from app.models.users import Users
@@ -19,14 +20,7 @@ logging.basicConfig(level=logging.INFO)
     "/token", status_code=status.HTTP_200_OK, response_model=TokenResponseSchema
 )
 async def login(
-    email: Annotated[
-        str,
-        Body(),
-    ],
-    password: Annotated[
-        str,
-        Body(),
-    ],
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_session),
 ):
 
@@ -35,21 +29,20 @@ async def login(
         detail="Incorrect username or password",
         headers={"WWW-Authenticate": "Bearer"},
     )
-
     user = select(Users).where(
-        Users.email == email,
+        Users.email == form_data.username,
         Users.is_active == True,
     )
     user = db.exec(user).first()
 
     if not user:
         raise credentials_exception
-    if not verify_password(password, user.password):
+    if not verify_password(form_data.password, user.password):
         raise credentials_exception
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": str(user.id)}, expires_delta=access_token_expires
+        data={"sub": str(user.id),"is_admin":user.is_admin}, expires_delta=access_token_expires
     )
     return {
         "access_token": access_token,

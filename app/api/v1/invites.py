@@ -3,7 +3,7 @@ import logging
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlmodel import Session, select
-from app.api.v1.authentication import ACCESS_TOKEN_EXPIRE_MINUTES, TokenResponseSchema, create_access_token, verify_password
+from app.api.v1.authentication import ACCESS_TOKEN_EXPIRE_MINUTES, TokenResponseSchema, create_access_token, is_admin, token_decode, verify_password
 from app.models.invites import Invites
 from app.models.users import Users
 from app.schemas.invites import InvitesResponseSchema, InvitesCreateSchema, InvitesUpdateSchema
@@ -16,14 +16,20 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-@router.post(
-    "/token", status_code=status.HTTP_200_OK, response_model=TokenResponseSchema
-)
-
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=InvitesResponseSchema)
-def create_invite(invite: InvitesCreateSchema, db: Session = Depends(get_session)):
-    logger.info(f"Creating invite with data: {invite.model_dump()}")
+def create_invite(
+    invite: InvitesCreateSchema,
+    db: Session = Depends(get_session),
+    user:int = Depends(token_decode),
+    ):
+    logger.info(f"Creating invite with data: {invite.model_dump()} {user}")
+    if not user.get("is_admin",False):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No autorizado")
     invite_data = invite.model_dump()
+    
+    if db.exec(select(Invites).where(Invites.dni == invite.dni)).first():
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="El invitado ya existe")
+
     db_invite = Invites(**invite_data)
     db.add(db_invite)
     db.commit()
