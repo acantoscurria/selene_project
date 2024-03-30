@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 
-@router.post("/create_post", status_code=status.HTTP_201_CREATED)
+@router.post("/create_post", status_code=status.HTTP_201_CREATED,response_model=PostsResponseSchema)
 async def create_post(
     file : UploadFile ,
     title: str = Form(...),
@@ -31,13 +31,13 @@ async def create_post(
         "content": content,
     }
 
-    file_path = os.path.join(STATIC_DIRECTORY, file.filename)
+    file_path = os.path.join(STATIC_DIRECTORY,file.filename)
 
     # Guardar el archivo en el servidor
     with open(file_path, "wb") as buffer:
         buffer.write(file.file.read())
 
-    db_post = Posts(**post_data, user_id=user.get("sub"), file_path=file_path)
+    db_post = Posts(**post_data, user_id=user.get("sub"), file_path=f"/static/{file.filename}")
     db.add(db_post)
     db.commit()
     db.refresh(db_post)

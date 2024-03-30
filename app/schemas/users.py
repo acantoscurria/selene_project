@@ -3,6 +3,8 @@ from datetime import date
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
+from app.schemas.invites import InvitesResponseSchema
+
 
 class UsersSchema(BaseModel):
     email: EmailStr = Field(max_length=255)
@@ -41,9 +43,4 @@ class UserUpdateSchema(BaseModel):
     is_active: Optional[bool] = Field(default=True)
     is_admin: Optional[bool] = Field(default=False)
     password: Optional[str] = Field(max_length=255,default=None)
-
-
-
-
-
 

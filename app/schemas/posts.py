@@ -8,12 +8,13 @@ from app.schemas.users import UserPostSchema
 class PostsSchema(BaseModel):
     title: str
     description: Optional[str] = Field(default=None)
+    file_path: Optional[str] = Field(default=None)
    
 
 
 class PostsResponseSchema(PostsSchema):
     user: UserPostSchema
-    creted_at: datetime.datetime
+    created_at: datetime.datetime
     updated_at: datetime.datetime
 
 
