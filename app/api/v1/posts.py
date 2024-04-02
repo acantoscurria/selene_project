@@ -2,6 +2,7 @@ import logging
 import os
 from typing import Optional
 from fastapi import APIRouter, Depends, Form, HTTPException, Security, UploadFile, status, Response
+from fastapi_pagination import Page, paginate
 from sqlmodel import Session, select
 from app.api.v1.authentication import token_decode
 from app.core.config import STATIC_DIRECTORY
@@ -43,3 +44,11 @@ async def create_post(
     db.refresh(db_post)
     return db_post
 
+
+@router.get("/get_posts", response_model=Page[PostsResponseSchema])
+async def get_posts(
+    user = Depends(token_decode),
+    db: Session = Depends(get_session)
+    ):
+    db_posts = db.exec(select(Posts)).all()
+    return paginate(db_posts)

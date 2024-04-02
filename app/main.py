@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi_pagination import add_pagination
 from app.api.v1.routers import router as api_v1_router
 from dotenv import load_dotenv
 from app.core import config
@@ -68,7 +69,7 @@ async def home():
     return HTMLResponse(content=html_content, status_code=200)
 
 
-
+add_pagination(app)
 app.include_router(api_v1_router, prefix="/api/v1")
 
 if config.CORS_ORIGINS:
