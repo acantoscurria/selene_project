@@ -9,7 +9,7 @@ from app.core.config import STATIC_DIRECTORY
 from app.core.database import get_session
 from fastapi import Body
 from app.models.posts import Posts
-from app.schemas.posts import PostsCreateSchema, PostsResponseSchema, PostsUpdateSchema
+from app.schemas.posts import PostsCreateSchema, PostsResponseSchema, PostsSchema, PostsUpdateSchema
 
 router = APIRouter()
 
@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 
-@router.post("/create_post", status_code=status.HTTP_201_CREATED,response_model=PostsResponseSchema)
+@router.post("/create_post", status_code=status.HTTP_201_CREATED,response_model=PostsSchema)
 async def create_post(
     file : UploadFile ,
     title: str = Form(...),
