@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-STATIC_DIRECTORY = os.getcwd() + "/static"
+STATIC_DIRECTORY = os.getcwd() + "/app/static"
 DEBUG = os.getenv("DEBUG", default=True)
 DATABASE_URL = os.getenv("DATABASE_URL")
 PROJECT_NAME: str = "Selene Project"
