@@ -21,22 +21,33 @@ El proyecto se desarrolla utilizando las siguientes tecnologías principales:
 
 # init
 
+```sh
 python3 -m venv .venv
+
 source .venv/bin/activate
 
 pip install -r requirements.txt
 
 pip freeze > requirements.txt
+```
 
 # install and run
 
+```sh
 pip install -r requirements.txt
+```
 
 # Ejecutar local
-uvicorn app.main:app --reload
-# Ejecutar con logs nivel INFO
-uvicorn app.main:app --log-level info
 
+```sh
+uvicorn app.main:app --reload
+```
+
+# Ejecutar con logs nivel INFO
+
+```sh
+uvicorn app.main:app --log-level info
+```
 
 #### migraciones ####
 
@@ -44,31 +55,38 @@ Crear carpeta "versions" en la ruta ./alembic/
 
 ## Comando para generar migraciones cuando se crean o modifican modelos 
 
+```sh
 alembic revision --autogenerate -m "init"
+```
 
 -------------
+
+```sh
 alembic revision -m "create table user"
 alembic history
 alembic current
-
+```
 
 # Comando para aplicar migraciones en la DB
 
+```sh
 alembic upgrade head
-
+```
 
 
 # Retroceder Migraciones
+
+```sh
 alembic downgrade -1
 alembic downgrade <revision_id>
 alembic downgrade base
-
-
+```
 
 # Pip update 
 
+```sh
 pur -r requirements.txt -o updates.txt > update.txt
-
+```
 
 ## Licencia
 
