@@ -9,7 +9,7 @@ from app.core.config import STATIC_DIRECTORY
 from app.core.database import get_session
 from fastapi import Body
 from app.models.posts import Posts
-from app.schemas.posts import PostsCreateSchema, PostsResponseSchema, PostsSchema, PostsUpdateSchema
+from app.schemas.posts import PostsResponseSchema, PostsSchema
 
 router = APIRouter()
 

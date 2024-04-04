@@ -10,7 +10,8 @@ class PostsSchema(BaseModel):
     title: str
     description: Optional[str] = Field(default=None)
     file_path: Optional[str] = Field(default=None)
-   
+    resourse_type: Optional[str] = Field(default=None)
+
 
 
 class PostsResponseSchema(PostsSchema):
@@ -27,7 +28,6 @@ class PostsCreateSchema(BaseModel):
     title: str
     description: Optional[str] = Field(default=None)
     resourse_url: Optional[str] = Field(default=None)
-    resourse_type: Optional[MediaType] = Field(default=None)
 
 
 class PostsUpdateSchema(BaseModel):
