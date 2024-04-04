@@ -24,6 +24,7 @@ El proyecto se desarrolla utilizando las siguientes tecnologías principales:
 ```sh
 python3 -m venv .venv
 
+
 source .venv/bin/activate
 
 pip install -r requirements.txt
@@ -38,10 +39,7 @@ pip install -r requirements.txt
 ```
 
 # Ejecutar local
-
-```sh
-uvicorn app.main:app --reload
-```
+uvicorn app.main:app --port 80 --reload
 
 # Ejecutar con logs nivel INFO
 
