@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
+os.environ.clear()
 load_dotenv()
 
 STATIC_DIRECTORY = os.getcwd() + "/app/static"

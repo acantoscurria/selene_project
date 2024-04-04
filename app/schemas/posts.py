@@ -1,5 +1,6 @@
 import datetime
 from datetime import date
+from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
@@ -18,10 +19,15 @@ class PostsResponseSchema(PostsSchema):
     updated_at: datetime.datetime
 
 
+class MediaType(Enum):
+    IMAGE = "image"
+    VIDEO = "video"
+
 class PostsCreateSchema(BaseModel):
     title: str
     description: Optional[str] = Field(default=None)
     resourse_url: Optional[str] = Field(default=None)
+    resourse_type: Optional[MediaType] = Field(default=None)
 
 
 class PostsUpdateSchema(BaseModel):

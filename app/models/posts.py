@@ -6,6 +6,7 @@ from sqlmodel import Relationship, Field
 from typing import Optional
 from app.models.global_mixins.timestamp_mixins import TimeStampMixin
 from app.models.invites import Invites
+from app.schemas.posts import MediaType
 
 
 class Posts(TimeStampMixin, table=True):
@@ -14,6 +15,7 @@ class Posts(TimeStampMixin, table=True):
     description: Optional[str] = Field(default=None)
     file_path: Optional[str] = Field(default=None)
     likes: int = Field(default=0)
+    resourse_type: Optional[MediaType] = Field(default=None)
 
     user_id: int = Field(foreign_key="users.id")
     user: "Users" = Relationship(back_populates="posts")
