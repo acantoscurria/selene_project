@@ -1,0 +1,15 @@
+#!/bin/bash
+
+NAME=selene_project
+DIR=/path/to/selene_project
+VENV=$DIR/.venv/bin/activate
+LOG_LEVEL=info
+PORT=8000
+
+cd $DIR
+source $VENV
+
+exec uvicorn app.main:app \
+  --port=$PORT \
+  --log-level=$LOG_LEVEL \
+  --no-access-log

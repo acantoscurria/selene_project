@@ -18,15 +18,18 @@ El proyecto se desarrolla utilizando las siguientes tecnologías principales:
 - **FastAPI**: Un moderno marco de desarrollo web para crear APIs rápidas con Python.
 - **Postgresql**: Una base de datos relacional ligera que se utiliza para almacenar los datos de la aplicación.
 
+## Configuración Inicial
 
-# init
+Creamos el entorno virtual de python y lo activamos para trabajar...
 
 ```sh
 python3 -m venv .venv
 
-
 source .venv/bin/activate
+```
+Instalamos los packages requeridos (si no activamos el entorno, se instalar en tu sistema). Luego, actualizamos las versiones.
 
+```sh
 pip install -r requirements.txt
 
 pip freeze > requirements.txt
@@ -39,7 +42,10 @@ pip install -r requirements.txt
 ```
 
 # Ejecutar local
+
+```sh
 uvicorn app.main:app --port 80 --reload
+```
 
 # Ejecutar con logs nivel INFO
 
@@ -70,7 +76,6 @@ alembic current
 ```sh
 alembic upgrade head
 ```
-
 
 # Retroceder Migraciones
 

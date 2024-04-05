@@ -51,8 +51,8 @@ async def home():
         <div class="container">
             <h1>{config.PROJECT_NAME}</h1>
             <p class="version">Versión: {config.PROJECT_VERSION}</p>
-            <p><a class="btn btn-primary" href="/redoc" target="_blank">Ir a Redoc</a></p>
-            <p><a class="btn btn-success" href="/docs" target="_blank">Ir a Swagger</a></p>
+            <p><a class="btn btn-primary" href="/redoc">Ir a Redoc</a></p>
+            <p><a class="btn btn-success" href="/docs">Ir a Swagger</a></p>
         </div>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
                 integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
