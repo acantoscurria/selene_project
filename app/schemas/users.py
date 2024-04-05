@@ -29,6 +29,7 @@ class UsersResponseSchema(UsersSchema):
     id: int
     email: EmailStr
     is_active: bool
+    is_admin: bool
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
