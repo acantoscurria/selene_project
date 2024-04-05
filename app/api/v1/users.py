@@ -50,7 +50,11 @@ async def login(
         scope= "invite"
 
     access_token = create_access_token(
-        data={"sub": str(user.id),"scopes":[scope]}, expires_delta=access_token_expires
+        data={
+            "sub": str(user.id),
+            "scopes":[scope],
+            "is_admin": user.is_admin,
+            }, expires_delta=access_token_expires
     )
     return {
         "access_token": access_token,

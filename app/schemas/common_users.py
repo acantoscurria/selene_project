@@ -10,6 +10,7 @@ class CommonUserResponseSchema(BaseModel):
     id: int
     email: EmailStr
     is_active: bool
+    is_admin: bool
     invite: Optional[InvitesResponseSchema] = None
     created_at: datetime.datetime
     updated_at: datetime.datetime
