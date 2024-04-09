@@ -23,6 +23,7 @@ class InvitesCreateSchema(InvitesSchema):
 class InvitesResponseSchema(InvitesSchema):
     id: int
     name: str = Field(max_length=255)
+    phone_number: str
     last_name: str = Field(max_length=255)
     user: Optional["UsersResponseSchema"]
     photo: Optional[str]
