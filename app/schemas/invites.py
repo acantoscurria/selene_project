@@ -26,6 +26,9 @@ class InvitesResponseSchema(InvitesSchema):
     phone_number: str
     last_name: str = Field(max_length=255)
     user: Optional["UsersResponseSchema"]
+    gender: Optional[Gender] = None
+    address: Optional[str] = None
+    dni: int
     photo: Optional[str]
 
 class InvitesUpdateSchema(InvitesSchema):
@@ -34,6 +37,8 @@ class InvitesUpdateSchema(InvitesSchema):
     birth_date: Optional[date] = Field(default=None)
     address: Optional[str] = Field(max_length=255,default=None)
     phone_number: Optional[str] = Field(max_length=255,default=None)
+    dni: Optional[int] = Field(default=None)
+
 
 
 class InvitesUpdatePhoto(BaseModel):
