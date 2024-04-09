@@ -5,6 +5,8 @@ from pydantic import BaseModel, EmailStr, Field
 
 from app.schemas.invites import InvitesResponseSchema
 
+class UsersInviteSchema(BaseModel):
+    id: int
 
 class UsersSchema(BaseModel):
     email: EmailStr = Field(max_length=255)
@@ -36,7 +38,7 @@ class UsersResponseSchema(UsersSchema):
 
 class UserPostSchema(BaseModel):
     email: EmailStr
-    invite: "InvitesResponseSchema"
+    invite: InvitesResponseSchema
 
 
 class UserUpdateSchema(BaseModel):
@@ -45,5 +47,3 @@ class UserUpdateSchema(BaseModel):
     is_admin: Optional[bool] = Field(default=False)
     password: Optional[str] = Field(max_length=255,default=None)
 
-class UsersInviteSchema(BaseModel):
-    id: int
