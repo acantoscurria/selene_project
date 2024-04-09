@@ -25,7 +25,7 @@ class InvitesResponseSchema(InvitesSchema):
     name: str = Field(max_length=255)
     phone_number: str
     last_name: str = Field(max_length=255)
-    user: Optional["UsersResponseSchema"]
+    user: Optional["UsersInviteSchema"]
     gender: Optional[Gender] = None
     address: Optional[str] = None
     dni: int
