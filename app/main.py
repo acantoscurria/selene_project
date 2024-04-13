@@ -5,7 +5,7 @@ from fastapi_pagination import add_pagination
 from app.api.v1.routers import router as api_v1_router
 from dotenv import load_dotenv
 from app.core import config
-
+from app.admin.administrator import admin
 load_dotenv()
 
 app = FastAPI()
@@ -83,3 +83,5 @@ if config.CORS_ORIGINS:
         allow_headers=["*"],
     )
 
+# Mount admin to your app
+admin.mount_to(app)

@@ -5,6 +5,13 @@ from dotenv import load_dotenv
 os.environ.clear()
 load_dotenv()
 
+DEBUG = os.getenv("DEBUG", default=True)
+
+if DEBUG:
+    PROJECT_URL = "http://localhost:8000"
+else:
+    PROJECT_URL: str = os.getenv("PROJECT_URL")
+
 STATIC_DIRECTORY = os.getcwd() + "/app/static"
 DEBUG = os.getenv("DEBUG", default=True)
 DATABASE_URL = os.getenv("DATABASE_URL")

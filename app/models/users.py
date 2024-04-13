@@ -1,5 +1,7 @@
 from enum import Enum
 from datetime import date
+
+from fastapi import Request
 from app.api.v1.authentication import get_password_hash
 from bcrypt import gensalt, hashpw
 from sqlmodel import Relationship, Field
@@ -31,5 +33,10 @@ class Users(TimeStampMixin, table=True):
         hashed_password = get_password_hash(self.password)
         self.password = hashed_password
 
+    async def __admin_repr__(self, request: Request):
+        return f"{self.email}"
+    
+    async def __admin_select2_repr__(self, request: Request) -> str:
+        return f'<div><span>{self.email}</span></div>'
 
 

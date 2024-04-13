@@ -46,3 +46,6 @@ starlette==0.36.3
 tomli==2.0.1
 typing_extensions==4.10.0
 uvicorn==0.27.1
+starlette-admin==0.13.2
+itsdangerous==2.1.2
+starlette-admin[i18n]

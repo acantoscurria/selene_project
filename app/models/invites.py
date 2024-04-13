@@ -1,5 +1,6 @@
 from enum import Enum
 from datetime import date
+from fastapi import Request
 from sqlmodel import Relationship, Field
 from typing import Optional
 from app.models.global_mixins.timestamp_mixins import TimeStampMixin
@@ -23,3 +24,8 @@ class Invites(TimeStampMixin, table=True):
 
     user:  Optional["Users"] = Relationship(back_populates="invite")
 
+    async def __admin_repr__(self, request: Request):
+        return f"{self.name} {self.last_name}"
+    
+    async def __admin_select2_repr__(self, request: Request) -> str:
+        return f'<div><span>{self.name} {self.last_name}</span></div>'
