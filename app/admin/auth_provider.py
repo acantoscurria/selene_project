@@ -32,6 +32,10 @@ class UsernameAndPasswordProvider(AuthProvider):
 
         if not user_db:
             raise LoginFailed("Usuario y/o contraseña incorrectos.")
+        
+
+        if not user_db.is_admin:
+            raise LoginFailed("No tienes permiso para ingresar a este sitio")
 
         if verify_password(password, user_db.password):
 
