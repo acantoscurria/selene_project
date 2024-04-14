@@ -1,7 +1,7 @@
 # Add view
 from typing import Any, Dict
 from fastapi import Request
-from starlette_admin import BooleanField, DateTimeField, HasOne, StringField
+from starlette_admin import BooleanField, DateTimeField, HasOne, StringField, PasswordField
 from starlette_admin.contrib.sqla import  ModelView
 
 from app.api.v1.authentication import get_password_hash
@@ -17,7 +17,7 @@ class UserView(ModelView):
 
     fields=[
         StringField("email","Email",required=True),
-        StringField("password","Contraseña",required=True),
+        PasswordField("password","Contraseña",required=True),
         BooleanField("is_active","Activo",),
         BooleanField("is_admin","Es Admin"),
         HasOne("invite","Invitado",identity="invitados"),

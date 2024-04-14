@@ -62,7 +62,8 @@ class UsernameAndPasswordProvider(AuthProvider):
     def get_admin_config(self, request: Request) -> AdminConfig:
         user = request.state.user  # Retrieve current user
         # Update app title according to current_user
-        custom_app_title = "Hola, " + user + "!"
+        # custom_app_title = "Hola, " + user + "!"
+        custom_app_title = "Selene Admin"
         # Update logo url according to current_user
         return AdminConfig(
             app_title=custom_app_title,

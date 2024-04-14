@@ -19,7 +19,7 @@ class InviteView(ModelView):
         StringField("last_name","Apellido",required=True),
         StringField("gender","Género",),
         DateField("birth_date","Fecha de Nacimiento",output_format="dd-MM-YYYY"),
-        StringField("phone_number","Número de teléfono",),
+        StringField("phone_number","Número de teléfono",required=True),
         StringField("address","Dirección",),
         IntegerField("dni","DNI",),
         HasOne("user","Usuario",identity="usuarios"),

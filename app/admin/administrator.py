@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # Create admin
 admin = Admin(
     engine, 
-    title="Descuentos Admin",
+    title="Selene Admin",
     i18n_config = I18nConfig(default_locale="es"),
     auth_provider=UsernameAndPasswordProvider(),
     middlewares=[Middleware(SessionMiddleware, secret_key=SECRET_KEY)],
@@ -29,7 +29,7 @@ admin = Admin(
 
 #  Add all of custom views
 admin.add_view(UserView(Users,icon="fa fa-user"))
-admin.add_view(InviteView(Invites,icon="fa fa-id-card"))
+admin.add_view(InviteView(Invites,icon="fas fa-ticket"))
 # admin.add_view(
 #     DropDown(
 #         "Lista",
