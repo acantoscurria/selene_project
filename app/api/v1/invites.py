@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Security, status, Respons
 from sqlmodel import Session, select
 from app.api.v1.authentication import token_decode
 from app.models.invites import Invites
-from app.schemas.invites import InvitesByDniSchema, InvitesResponseSchema, InvitesCreateSchema, InvitesUpdateSchema
+from app.schemas.invites import  InvitesResponseSchema, InvitesCreateSchema, InvitesUpdateSchema
 from app.core.database import get_session
 from fastapi import Body
 
@@ -23,7 +23,7 @@ def create_invite(
     
     invite_data = invite.model_dump()
     
-    if db.exec(select(Invites).where(Invites.dni == invite.dni)).first():
+    if db.exec(select(Invites).where(Invites.phone_number == invite.phone_number)).first():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="El invitado ya existe")
 
     db_invite = Invites(**invite_data)

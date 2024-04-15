@@ -17,7 +17,7 @@ class UsersSchema(BaseModel):
 
 class UsersCreateSchema(UsersSchema):
     password: str = Field(max_length=255)
-    dni: int = Field()
+    phone_number: str = Field()
 
 
 class UsersAdminCreateSchema(UsersSchema):

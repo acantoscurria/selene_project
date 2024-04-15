@@ -14,6 +14,7 @@ class UserView(ModelView):
     name = "Usuario"
     label = "Usuarios"
     exclude_fields_from_list= ["password"]
+    exclude_fields_from_detail=["password"]
 
     fields=[
         StringField("email","Email",required=True),

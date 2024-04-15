@@ -5,7 +5,7 @@ from app.api.v1.authentication import token_decode
 from app.models.invites import Invites
 from app.models.users import Users
 from app.schemas.common_users import CommonUserResponseSchema
-from app.schemas.invites import InvitesByDniSchema, InvitesResponseSchema, InvitesCreateSchema, InvitesUpdateSchema
+from app.schemas.invites import  InvitesResponseSchema, InvitesCreateSchema, InvitesUpdateSchema
 from app.core.database import get_session
 from fastapi import Body
 
@@ -32,7 +32,7 @@ def create_user(
     
     statement = select(Invites)
 
-    invite_exists=db.exec(statement.where(Invites.dni == new_user.dni)).first()
+    invite_exists=db.exec(statement.where(Invites.phone_number == new_user.phone_number)).first()
 
     if not invite_exists:
         raise HTTPException(

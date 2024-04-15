@@ -7,8 +7,9 @@ from app.models.global_mixins.timestamp_mixins import TimeStampMixin
 
 
 class Gender(str, Enum):
-    MALE = "male"
-    FEMALE = "female"
+    Masculino = "male"
+    Femenino = "female"
+    Otros = "Otros"
 
 
 class Invites(TimeStampMixin, table=True):
@@ -20,7 +21,7 @@ class Invites(TimeStampMixin, table=True):
     phone_number: str = Field(max_length=255)
     address: Optional[str] = Field(max_length=255)
     photo: Optional[str] = Field(max_length=255)
-    dni: int = Field(unique=True)
+
 
     user:  Optional["Users"] = Relationship(back_populates="invite")
 
