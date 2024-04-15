@@ -1,7 +1,9 @@
+from datetime import timedelta
 import logging
 from fastapi import APIRouter, Depends, HTTPException, Security, status, Response
 from sqlmodel import Session, select
-from app.api.v1.authentication import token_decode
+from app.api.v1.authentication import create_access_token, token_decode
+from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from app.models.invites import Invites
 from app.models.users import Users
 from app.schemas.common_users import CommonUserResponseSchema
@@ -9,7 +11,7 @@ from app.schemas.invites import  InvitesResponseSchema, InvitesCreateSchema, Inv
 from app.core.database import get_session
 from fastapi import Body
 
-from app.schemas.users import UsersCreateSchema, UsersResponseSchema
+from app.schemas.users import UsersCreateSchema, UsersResponseCreateSchema, UsersResponseSchema
 
 router = APIRouter()
 
@@ -18,7 +20,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-@router.post("/create_user", status_code=status.HTTP_201_CREATED, response_model=UsersResponseSchema)
+@router.post("/create_user", status_code=status.HTTP_201_CREATED, response_model=UsersResponseCreateSchema)
 def create_user(
     new_user: UsersCreateSchema, 
     db: Session = Depends(get_session)
@@ -43,7 +45,6 @@ def create_user(
             status_code=status.HTTP_400_BAD_REQUEST, detail="El usuario ya está registrado"
         )
 
-
     user_data = new_user.model_dump()
     db_user = Users(**user_data)
     db_user.hash_password()
@@ -52,7 +53,22 @@ def create_user(
     db.commit()
     db.refresh(db_user)
     logger.info(f"User created with ID: {db_user.id}, and values: {db_user}")
-    return db_user
+
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
+    access_token = create_access_token(
+        data={
+            "sub": str(db_user.id),
+            "scopes":["invite"],
+            "is_admin": db_user.is_admin,
+            }, expires_delta=access_token_expires
+    )
+    res = {
+        "user": db_user,
+        "access_token": access_token,
+        "token_type": "bearer",
+    }
+    return res
 
 
 

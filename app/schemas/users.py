@@ -34,6 +34,12 @@ class UsersResponseSchema(UsersSchema):
     is_admin: bool
     created_at: datetime.datetime
     updated_at: datetime.datetime
+    
+
+class UsersResponseCreateSchema(UsersSchema):
+    user: UsersResponseSchema
+    access_token: str 
+    token_type: str
 
 
 class UserPostSchema(BaseModel):
