@@ -7,7 +7,7 @@ from app.api.v1.authentication import create_access_token
 from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES
 
 
-class UploadUsersView(CustomView):
+class UploadInvitesView(CustomView):
     async def render(self, request: Request, templates: Jinja2Templates) -> Response:
 
         access_token_expires = timedelta(minutes=5)
@@ -26,10 +26,10 @@ class UploadUsersView(CustomView):
         )
 
         return templates.TemplateResponse(
-            "upload_users.html", 
+            "upload_invites.html", 
             context={
                 "request": request, 
                 "token": access_token,
-                "upload_users_active": True
+                "upload_invites_active": True
                 }
         )
