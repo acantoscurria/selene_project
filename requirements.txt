@@ -49,3 +49,4 @@ uvicorn==0.27.1
 starlette-admin==0.13.2
 itsdangerous==2.1.2
 starlette-admin[i18n]
+Openpyxl

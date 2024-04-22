@@ -1,6 +1,7 @@
 from fastapi.middleware import Middleware
 from starlette_admin import CustomView, DropDown, I18nConfig
 from starlette_admin.contrib.sqla import Admin
+from app.admin.admin_views.custom_views.upload_users import UploadUsersView
 from app.admin.admin_views.invites import InviteView
 from app.admin.auth_provider import UsernameAndPasswordProvider
 from app.core.config import PROJECT_URL
@@ -28,17 +29,17 @@ admin = Admin(
 )
 
 #  Add all of custom views
-admin.add_view(UserView(Users,icon="fa fa-user"))
+
+admin.add_view(
+    DropDown(
+        "Usuarios",
+        icon="fa fa-users",
+        views=[
+            UserView(Users,icon="fa fa-user"),
+            UploadUsersView("Cargar usuarios",icon="fas fa-list",path="/usuarios/upload_users"),
+        ],
+        always_open=False
+    )
+)
 admin.add_view(InviteView(Invites,icon="fas fa-ticket"))
-# admin.add_view(
-#     DropDown(
-#         "Lista",
-#         icon="fa fa-list",
-#         views=[
-#             Link(label="Home Page", url="/"),
-#             CustomView(label="Dashboard", path="/dashboard", template_path="new_template.html"),
-#         ],
-#         always_open=False
-#     )
-# )
 

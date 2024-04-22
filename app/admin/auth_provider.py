@@ -42,6 +42,7 @@ class UsernameAndPasswordProvider(AuthProvider):
             request.session.update({
                 "username": user_db.email,
                 "name": user_db.email,
+                "is_admin": user_db.is_admin
                 })
             return response
 

@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{model.label = "Cargar usuarios"}
+{% block header %}
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Cargar usuarios</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ url_for(__name__ ~ ':index') }}">{{ _("Admin") }}</a>
+        </li>
+        <li class="breadcrumb-item active">Cargar usuarios</li>
+    </ol>
+</div>
+{% endblock %}
+{% block modal %}
+{% include "modals/loading.html" %}
+{% include "modals/error.html" %}
+{% include "modals/actions.html" %}
+{% endblock %}
+{% block content %}
+<div id="alertContainer"></div>
+<div class="row mt-5">
+    <div class="container col-10">
+        <form>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Default file input example</label>
+                <input class="form-control " type="file" id="formFile">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="send_file()">Submit</button>
+        </form>
+    </div>
+</div>
+<script>
+    function send_file() {
+        const url = 'http://localhost:8000/api/v1/users/upload_users/';
+
+        // Datos del archivo a subir
+        const fileInput = document.getElementById('formFile');
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+
+        // Cabeceras de la solicitud
+        const headers = new Headers();
+        headers.append('Authorization', 'Bearer {{token}}');
+
+        // Opciones de la solicitud
+        const options = {
+            method: 'POST',
+            headers: headers,
+            body: formData
+        };
+
+        // Realizar la solicitud
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok){
+                    if (response.status == 400) {
+                        response.json().then(data =>{
+                            dangerAlert(data.detail)
+                        }); 
+                }
+                throw new Error('Hubo un problema al subir el archivo.');
+                }
+
+                else{
+                    successAlert("Archivo subido exitosamente.");
+                    response.json().then(data =>{
+                        console.log(data.filename)
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+</script>
+<script type="text/javascript" src="{{ url_for(__name__ ~ ':statics', path='js/alerts.js') }}"></script>
+{% endblock %}

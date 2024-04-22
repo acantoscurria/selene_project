@@ -1,7 +1,7 @@
 from datetime import timedelta
 import logging
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Security, status, Response
+from fastapi import APIRouter, Depends, HTTPException, Security, UploadFile, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from app.api.v1.authentication import ACCESS_TOKEN_EXPIRE_MINUTES, TokenResponseSchema, create_access_token, token_decode, verify_password
@@ -150,3 +150,14 @@ def delete_user(
     db.delete(db_user)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/upload_users/")
+async def create_upload_file(
+    file: UploadFile,
+    user = Security(token_decode,scopes=["admin"]),
+    ):
+    print(file.headers)
+    if "officedocument" not in file.content_type:
+        raise HTTPException(status_code=400, detail="El archivo subido no es el esperado (xlsx)")
+    return {"filename": file.filename}
