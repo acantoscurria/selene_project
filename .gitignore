@@ -221,3 +221,4 @@ $RECYCLE.BIN/
 # ###### Custom #####
 /app/static/*
 !/app/static/empty
+*.xls

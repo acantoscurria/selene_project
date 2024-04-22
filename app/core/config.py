@@ -13,6 +13,7 @@ else:
     PROJECT_URL: str = os.getenv("PROJECT_URL")
 
 STATIC_DIRECTORY = os.getcwd() + "/app/static"
+MEDIA_ADMIN_DIRECTORY = os.getcwd() + "/app/admin/media"
 DEBUG = os.getenv("DEBUG", default=True)
 DATABASE_URL = os.getenv("DATABASE_URL")
 PROJECT_NAME: str = "Mis Quince - Selene"

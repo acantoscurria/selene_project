@@ -1,7 +1,10 @@
 import logging
-from fastapi import APIRouter, Depends, HTTPException, Security, status, Response
+import os
+from fastapi import APIRouter, Depends, HTTPException, Security, UploadFile, status, Response
+import openpyxl
 from sqlmodel import Session, select
 from app.api.v1.authentication import token_decode
+from app.core.config import MEDIA_ADMIN_DIRECTORY
 from app.models.invites import Invites
 from app.schemas.invites import  InvitesResponseSchema, InvitesCreateSchema, InvitesUpdateSchema
 from app.core.database import get_session
@@ -107,3 +110,43 @@ def delete_invite(
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
+
+@router.post("/upload_invites/")
+async def create_upload_file(
+    file: UploadFile,
+    user = Security(token_decode,scopes=["admin"]),
+    db: Session = Depends(get_session)
+    ):
+    print(file.filename)
+
+    if "officedocument" not in file.content_type:
+        raise HTTPException(status_code=400, detail="El archivo subido no es el esperado (xlsx)")
+    
+
+    file_path = os.path.join(MEDIA_ADMIN_DIRECTORY,file.filename)
+
+    # Guardar el archivo en el servidor
+    with open(file_path, "wb") as buffer:
+        buffer.write(file.file.read())
+    
+    wb = openpyxl.load_workbook(os.path.join(MEDIA_ADMIN_DIRECTORY,file.filename))
+    ws = wb.active
+    print('Total number of rows: '+str(ws.max_row)+'. And total number of columns: '+str(ws.max_column))
+
+    # users_list = []
+
+    # for value in ws.iter_rows(min_row=1, values_only=True):
+    #     users_list.append(value)
+
+    for row in ws.iter_rows(min_row=2,max_col=6):
+        invite = []
+
+        for index,cell in enumerate(row):
+            invite.append(cell.value)
+            
+        new_invite = Invites(name=invite[0], last_name=invite[1], gender=invite[2], birth_date=invite[3], phone_number=invite[4], address=invite[5])
+        db.add(new_invite)
+    db.commit()
+
+        
+    return {"filename": file.filename}

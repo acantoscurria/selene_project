@@ -151,13 +151,3 @@ def delete_user(
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-
-@router.post("/upload_users/")
-async def create_upload_file(
-    file: UploadFile,
-    user = Security(token_decode,scopes=["admin"]),
-    ):
-    print(file.headers)
-    if "officedocument" not in file.content_type:
-        raise HTTPException(status_code=400, detail="El archivo subido no es el esperado (xlsx)")
-    return {"filename": file.filename}
