@@ -27,18 +27,12 @@ python3 -m venv .venv
 
 source .venv/bin/activate
 ```
-Instalamos los packages requeridos (si no activamos el entorno, se instalar en tu sistema). Luego, actualizamos las versiones.
+Instalamos los packages requeridos (si no activamos el entorno, se instalan en tu sistema).
 
 ```sh
 pip install -r requirements.txt
 
 pip freeze > requirements.txt
-```
-
-# install and run
-
-```sh
-pip install -r requirements.txt
 ```
 
 # Ejecutar local
@@ -53,7 +47,7 @@ uvicorn app.main:app --port 80 --reload
 uvicorn app.main:app --log-level info
 ```
 
-#### migraciones ####
+#### Migraciones ####
 
 Crear carpeta "versions" en la ruta ./alembic/
 

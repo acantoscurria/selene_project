@@ -1,14 +1,16 @@
 {% extends "layout.html" %}
-{model.label = "Cargar usuarios"}
+{model.label = "Cargar Invitados"}
 {% block header %}
-<div class="d-flex justify-content-between align-items-center">
-    <h1>Cargar usuarios</h1>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="{{ url_for(__name__ ~ ':index') }}">{{ _("Admin") }}</a>
-        </li>
-        <li class="breadcrumb-item active">Cargar usuarios</li>
-    </ol>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Cargar Invitados</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ url_for(__name__ ~ ':index') }}">{{ _("Admin") }}</a>
+            </li>
+            <li class="breadcrumb-item active">Cargar Invitados</li>
+        </ol>
+    </div>
 </div>
 {% endblock %}
 {% block modal %}
@@ -17,21 +19,24 @@
 {% include "modals/actions.html" %}
 {% endblock %}
 {% block content %}
-<div id="alertContainer"></div>
-<div class="row mt-5">
-    <div class="container col-10">
-        <form>
-            <div class="mb-3">
-                <label for="formFile" class="form-label">Default file input example</label>
-                <input class="form-control " type="file" id="formFile">
-            </div>
-            <button type="button" class="btn btn-primary" onclick="send_file()">Submit</button>
-        </form>
+<div class="container">
+    <div id="alertContainer"></div>
+    <div class="row mt-5">
+        <div class="col-10">
+            <form>
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Seleccione la planilla con invitados</label>
+                    <input class="form-control" type="file" id="formFile">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="send_file()">Procesar</button>
+            </form>
+        </div>
     </div>
 </div>
 <script>
     function send_file() {
-        const url = 'http://localhost:8000/api/v1/invites/upload_invites/';
+        //const url = 'http://localhost:8000/api/v1/invites/upload_invites/';
+        const url = 'https://selene.yacarestudio.com/api/v1/invites/upload_invites/';
 
         // Datos del archivo a subir
         const fileInput = document.getElementById('formFile');
@@ -53,16 +58,14 @@
         // Realizar la solicitud
         fetch(url, options)
             .then(response => {
-                if (!response.ok){
+                if (!response.ok) {
                     if (response.status == 400) {
-                        response.json().then(data =>{
+                        response.json().then(data => {
                             dangerAlert(data.detail)
                         }); 
-                }
-                throw new Error('Hubo un problema al subir el archivo.');
-                }
-
-                else{
+                    }
+                    throw new Error('Hubo un problema al subir el archivo.');
+                } else {
                     successAlert("Archivo subido exitosamente.");
                     response.json().then(data =>{
                         console.log(data.filename)
