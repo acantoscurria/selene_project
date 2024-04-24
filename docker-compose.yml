@@ -1,4 +1,5 @@
 version: '3'
+
 services:
 
   selene_project:
@@ -12,7 +13,6 @@ services:
       - traefik.http.routers.selene_project.rule=Host(`localhost`)
       # Tell Traefik to use the port 12345 to connect to `my-container`
       - traefik.http.services.selene_project.loadbalancer.server.port=8000
-
 
 
   reverse-proxy:

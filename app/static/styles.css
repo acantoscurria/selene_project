@@ -1,0 +1,23 @@
+body {
+  padding: 20px;
+}
+
+.version {
+  color: #ff4400;
+}
+
+h1 {
+  color: #007BFF;
+  border-left: 4px solid #007BFF;
+  padding-left: 10px;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px #888888;
+}
+
+p {
+  margin: 10px 0;
+}
+
+.resalte {
+  color: #ff4400 !important;
+}

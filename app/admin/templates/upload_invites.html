@@ -2,17 +2,15 @@
 {model.label = "Cargar Invitados"}
 
 {% block header %}
-<div class="container">
     <div class="d-flex justify-content-between align-items-center">
-        <h1>Cargar Invitados</h1>
+        <h1>Importar Invitados</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ url_for(__name__ ~ ':index') }}">{{ _("Admin") }}</a>
             </li>
-            <li class="breadcrumb-item active">Cargar Invitados</li>
+            <li class="breadcrumb-item active">Importar Invitados</li>
         </ol>
     </div>
-</div>
 {% endblock %}
 
 {% block modal %}
@@ -22,22 +20,23 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div id="alertContainer"></div>
-    <div class="row">
-        <div class="col-10 mx-auto">
-            <form>
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">Seleccione la planilla con invitados</label>
-                    <input class="form-control" type="file" id="formFile">
-                </div>
-                <button type="button" class="btn btn-primary" onclick="send_file()">Procesar</button>
-            </form>
+    <div class="container-fluid">
+        <div id="alertContainer"></div>
+        <div class="card">
+          <div class="card-body">
+              <form>
+                  <div class="mb-3">
+                      <label for="formFile" class="form-label">Seleccione la planilla en formato Excel 2007+ con los invitados:</label>
+                      <input class="form-control" type="file" id="formFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                  </div>
+                  <button type="button" class="btn btn-sm btn-success" onclick="send_file()">Procesar Archivo</button>
+              </form>
+          </div>
         </div>
     </div>
-</div>
 
 <script>
+
     function send_file() {
         //const url = 'http://localhost:8000/api/v1/invites/upload_invites/';
         const url = 'https://selene.yacarestudio.com/api/v1/invites/upload_invites/';
@@ -62,17 +61,18 @@
         // Realizar la solicitud
         fetch(url, options)
             .then(response => {
+                //console.log(response);
                 if (!response.ok) {
                     if (response.status == 400) {
                         response.json().then(data => {
-                            dangerAlert(data.detail)
-                        }); 
+                            dangerAlert(data.detail);
+                        });
                     }
                     throw new Error('Hubo un problema al subir el archivo.');
                 } else {
                     successAlert("Archivo subido exitosamente.");
                     response.json().then(data =>{
-                        console.log(data.filename)
+                        console.log(data.filename);
                     });
                 }
             })

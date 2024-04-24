@@ -28,41 +28,21 @@ async def home():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{config.PROJECT_NAME}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-              integrity="sha384-TQsmiRSSTVx8S9k+EcaFbAVP3AqjszGzAbF44akQF8s73sPQ7DZgMVz4M"
-              crossorigin="anonymous">
-        <style>
-            body {{
-                padding: 20px;
-            }}
-            h1 {{
-                color: #007BFF;
-            }}
-            p {{
-                margin-bottom: 10px;
-            }}
-            .version {{
-                font-size: 1.2em;
-                color: red;
-            }}
-        </style>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+        <link href="{config.PROJECT_URL}/static/styles.css" rel="stylesheet" />
     </head>
     <body>
         <div class="container">
             <h1>{config.PROJECT_NAME}</h1>
-            <p class="version">Versión: {config.PROJECT_VERSION}</p>
-            <p><a class="btn btn-primary" href="/redoc">Ir a Redoc</a></p>
-            <p><a class="btn btn-success" href="/docs">Ir a Swagger</a></p>
+            <p class="version">API Versión: {config.PROJECT_VERSION}</p>
+            <!--
+            <p><a class="btn btn-sm btn-primary" href="/redoc">Ir a Redoc</a></p>
+            <p><a class="btn btn-sm btn-success" href="/docs">Ir a Swagger</a></p>
+            -->
         </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-                crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"
-                integrity="sha384-d3Ae53p8I7zv6YzELRfyg53CUfnvm1CX4fihcPKw1VA7N0Xwoj3PxPTmeIs9LTQe"
-                crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-                integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy0aAxyBc7pScwx3/jIIciJMrL4dbB4ZH6"
-                crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     </body>
     </html>
     """
@@ -70,7 +50,7 @@ async def home():
 
 
 @app.get("/privacidad", response_class=HTMLResponse)
-async def home():
+async def privacidad():
     html_content = f"""
     <!DOCTYPE html>
     <html lang="es">
@@ -78,32 +58,13 @@ async def home():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{config.PROJECT_NAME}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-              integrity="sha384-TQsmiRSSTVx8S9k+EcaFbAVP3AqjszGzAbF44akQF8s73sPQ7DZgMVz4M"
-              crossorigin="anonymous">
-        <style>
-            body {{
-                padding: 20px;
-            }}
-            h1 {{
-                color: #007BFF;
-            }}
-            p {{
-                margin-bottom: 10px;
-            }}
-            .version {{
-                font-size: 1.2em;
-                color: red;
-            }}
-            .resalte {{
-                color: #ff4400!important;
-            }}
-        </style>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="{config.PROJECT_URL}/static/styles.css" rel="stylesheet" />
     </head>
     <body>
         <div class="container">
-            <h1>Políticas de Privacidad</h1>
             <div class="container">
+                <h1>Políticas de Privacidad</h1>
                 <div class="row mt-3">
                     <div class="col-md-12">
                         <h4 class="resalte">App Móvil</h4>
@@ -111,10 +72,10 @@ async def home():
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p class="mb-2">Esta política de privacidad está en redacción, pero te comentamos que esta APP Móvil disponible en el Google PlayStore, no necesita de ningún permiso para funcionar.</p>
-                        <p class="mb-2">De todas maneras, almacenamos localmente información de tu inicio de sesión. Pero solo guardamos aquellos datos personales que ingresaste en Perfil de Usuario. La utilizamos para completar la pantalla de Pagar Cuota. Y también para personalizar otros mensajes dentro de la app.</p>
-                        <p class="mb-2">Algo muy importante, no compartimos ninguno de estos datos con nuestros Socio Comercial.</p>
-                        <p class="mb-2">Última Modificación: 23/04/2024.</p>
+                        <p>Si bien, esta política de privacidad está en redacción, te comentamos que esta APP Móvil disponible en el Google PlayStore, necesita permisos para acceder a la Cámara y a tu Galería, para poder compartir fotos y videos del evento.</p>
+                        <p>Almacenamos localmente información de tu inicio de sesión. Pero solo guardamos aquellos datos que ingresaste al registrarte. Y también para personalizar otros mensajes dentro de la app.</p>
+                        <p>Algo muy importante, no se comparten datos con ningún Socio Comercial.</p>
+                        <p>Última Modificación: 24/04/2024.</p>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -124,22 +85,16 @@ async def home():
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p class="mb-2">Esta política de privacidad está en redacción, pero te comentamos que este Sitio Web solo almacena información cuado te registras como Usuario.</p>
-                        <p>Algo muy importante, no compartimos ninguno de estos datos con nuestros Socio Comercial.</p>
-                        <p class="mb-2">Última Modificación: 23/04/2024.</p>
+                        <p>Si bien, esta política de privacidad está en redacción, te comentamos que este Sitio Web no almacena información alguna.</p>
+                        <p>Algo muy importante, no se comparten datos con ningún Socio Comercial.</p>
+                        <p>Última Modificación: 24/04/2024.</p>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-                crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"
-                integrity="sha384-d3Ae53p8I7zv6YzELRfyg53CUfnvm1CX4fihcPKw1VA7N0Xwoj3PxPTmeIs9LTQe"
-                crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-                integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy0aAxyBc7pScwx3/jIIciJMrL4dbB4ZH6"
-                crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     </body>
     </html>
     """
