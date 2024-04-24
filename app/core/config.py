@@ -5,10 +5,11 @@ from dotenv import load_dotenv
 os.environ.clear()
 load_dotenv()
 
-DEBUG = os.getenv("DEBUG", default=True)
+DEBUG = os.getenv("DEBUG", default=False)
 
 if DEBUG:
-    PROJECT_URL = "http://localhost:8000"
+    #PROJECT_URL = "http://localhost:8000"
+    PROJECT_URL = "https://selene.yacarestudio.com"
 else:
     PROJECT_URL: str = os.getenv("PROJECT_URL")
 
