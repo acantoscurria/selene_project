@@ -13,23 +13,23 @@ class UploadInvitesView(CustomView):
         access_token_expires = timedelta(minutes=5)
 
         if request.session.get("is_admin"):
-            scope= "admin"
+            scope = "admin"
         else:
-            scope= "invite"
+            scope = "invite"
 
         access_token = create_access_token(
             data={
                 "sub": str(request.session.get("id")),
-                "scopes":[scope],
+                "scopes": [scope],
                 "is_admin": request.session.get("is_admin"),
-                }, expires_delta=access_token_expires
+            }, expires_delta=access_token_expires
         )
 
         return templates.TemplateResponse(
-            "upload_invites.html", 
+            "upload_invites.html",
             context={
-                "request": request, 
+                "request": request,
                 "token": access_token,
                 "upload_invites_active": True
-                }
+            }
         )

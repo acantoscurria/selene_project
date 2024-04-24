@@ -11,8 +11,6 @@ from sqlmodel import Session, select
 from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 
 
-
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/users/token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -21,6 +19,7 @@ class TokenResponseSchema(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     username: str | None = None
     scopes: list[str] = []
@@ -28,12 +27,11 @@ class TokenData(BaseModel):
 
 def verify_password(plain_password, hashed_password):
     '''Verifica que el password almacenado sea el mismo que el ingresado en login'''
-
     return pwd_context.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password):
-    '''hasea el password'''
+    '''hashea el password'''
     return pwd_context.hash(password)
 
 
@@ -49,11 +47,10 @@ def create_access_token(data: dict, expires_delta: float = ACCESS_TOKEN_EXPIRE_M
     return encoded_jwt
 
 
-
 async def token_decode(
         token: Annotated[str, Depends(oauth2_scheme)],
         security_scopes: SecurityScopes
-        ):
+):
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -72,8 +69,9 @@ async def token_decode(
 
     except JWTError:
         raise credentials_exception
-    
-    token_data = TokenData(scopes=payload.get("scopes", []), username=payload.get("sub"))
+
+    token_data = TokenData(scopes=payload.get(
+        "scopes", []), username=payload.get("sub"))
 
     for scope in security_scopes.scopes:
         if scope not in token_data.scopes:
@@ -82,5 +80,4 @@ async def token_decode(
                 detail="No tienes suficientes permisos",
                 headers={"WWW-Authenticate": authenticate_value},
             )
-    return payload 
-
+    return payload

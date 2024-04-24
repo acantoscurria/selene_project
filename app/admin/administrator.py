@@ -18,9 +18,9 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # Create admin
 admin = Admin(
-    engine, 
+    engine,
     title="Selene Admin",
-    i18n_config = I18nConfig(default_locale="es"),
+    i18n_config=I18nConfig(default_locale="es"),
     auth_provider=UsernameAndPasswordProvider(),
     middlewares=[Middleware(SessionMiddleware, secret_key=SECRET_KEY)],
     templates_dir='app/admin/templates',
@@ -36,10 +36,9 @@ admin.add_view(
         icon="fa fa-users",
         views=[
             InviteView(Invites),
-            UploadInvitesView("Cargar invitados",icon="fas fa-list",path="/usuarios/upload_invites"),
+            UploadInvitesView("Cargar invitados", icon="fas fa-list", path="/usuarios/upload_invites"),
         ],
-        always_open=False
+        always_open=True
     )
 )
 admin.add_view(UserView(Users, icon="fas fa-user"))
-

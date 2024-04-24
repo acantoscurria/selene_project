@@ -14,7 +14,3 @@ class CommonUserResponseSchema(BaseModel):
     invite: Optional[InvitesResponseSchema] = None
     created_at: datetime.datetime
     updated_at: datetime.datetime
-
-
-
-

@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {model.label = "Cargar Invitados"}
+
 {% block header %}
 <div class="container">
     <div class="d-flex justify-content-between align-items-center">
@@ -13,16 +14,18 @@
     </div>
 </div>
 {% endblock %}
+
 {% block modal %}
 {% include "modals/loading.html" %}
 {% include "modals/error.html" %}
 {% include "modals/actions.html" %}
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div id="alertContainer"></div>
-    <div class="row mt-5">
-        <div class="col-10">
+    <div class="row">
+        <div class="col-10 mx-auto">
             <form>
                 <div class="mb-3">
                     <label for="formFile" class="form-label">Seleccione la planilla con invitados</label>
@@ -33,6 +36,7 @@
         </div>
     </div>
 </div>
+
 <script>
     function send_file() {
         //const url = 'http://localhost:8000/api/v1/invites/upload_invites/';
@@ -78,5 +82,7 @@
     };
 
 </script>
+
 <script type="text/javascript" src="{{ url_for(__name__ ~ ':statics', path='js/alerts.js') }}"></script>
+
 {% endblock %}

@@ -6,7 +6,7 @@ from sqlalchemy import pool
 
 from app.core.config import DATABASE_URL
 from app.core.database import engine
-from app.core.database import database  
+from app.core.database import database
 
 from alembic import context
 
@@ -34,8 +34,8 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 # target_metadata = None
-target_metadata =  SQLModel.metadata
- 
+target_metadata = SQLModel.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -58,7 +58,7 @@ def run_migrations_offline() -> None:
    # url = config.get_main_option("sqlalchemy.url")
     url = config.get_main_option(DATABASE_URL)
     context.configure(
-        url= url,
+        url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -66,6 +66,7 @@ def run_migrations_offline() -> None:
 
     with context.begin_transaction():
         context.run_migrations()
+
 
 """
 def run_migrations_online() -> None:
@@ -91,6 +92,8 @@ def run_migrations_online() -> None:
         with context.begin_transaction():
             context.run_migrations()
 """
+
+
 def run_migrations_online() -> None:
     connectable = engine_from_config(
         {"sqlalchemy.url": DATABASE_URL},  # Agregar la URL aquí
@@ -104,6 +107,7 @@ def run_migrations_online() -> None:
 
         with context.begin_transaction():
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

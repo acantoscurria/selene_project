@@ -18,21 +18,20 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-
-@router.post("/create_post", status_code=status.HTTP_201_CREATED,response_model=PostsSchema)
+@router.post("/create_post", status_code=status.HTTP_201_CREATED, response_model=PostsSchema)
 async def create_post(
-    file : UploadFile ,
+    file: UploadFile,
     title: str = Form(...),
     content: Optional[str] = Form(default=None),
-    user = Depends(token_decode),
+    user=Depends(token_decode),
     db: Session = Depends(get_session)
-    ):
-    post_data={
+):
+    post_data = {
         "title": title,
         "content": content,
     }
 
-    file_path = os.path.join(STATIC_DIRECTORY,file.filename)
+    file_path = os.path.join(STATIC_DIRECTORY, file.filename)
 
     # Guardar el archivo en el servidor
     with open(file_path, "wb") as buffer:
@@ -47,8 +46,8 @@ async def create_post(
 
 @router.get("/get_posts", response_model=Page[PostsResponseSchema])
 async def get_posts(
-    user = Depends(token_decode),
+    user=Depends(token_decode),
     db: Session = Depends(get_session)
-    ):
+):
     db_posts = db.exec(select(Posts)).all()
     return paginate(db_posts)

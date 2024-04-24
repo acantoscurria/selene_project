@@ -18,6 +18,7 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+
 @router.post(
     "/token", status_code=status.HTTP_200_OK, response_model=TokenResponseSchema
 )
@@ -45,16 +46,16 @@ async def login(
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     if user.is_admin:
-        scope= "admin"
+        scope = "admin"
     else:
-        scope= "invite"
+        scope = "invite"
 
     access_token = create_access_token(
         data={
             "sub": str(user.id),
-            "scopes":[scope],
+            "scopes": [scope],
             "is_admin": user.is_admin,
-            }, expires_delta=access_token_expires
+        }, expires_delta=access_token_expires
     )
     return {
         "access_token": access_token,
@@ -66,7 +67,7 @@ async def login(
 def create_admin_user(
     new_user: UsersAdminCreateSchema,
     db: Session = Depends(get_session)
-    ):
+):
     logger.info(f"Creating admin user with data: {new_user.model_dump()}")
 
     user_data = new_user.model_dump()
@@ -79,17 +80,18 @@ def create_admin_user(
     logger.info(f"User created with ID: {db_user.id}, and values: {db_user}")
     return db_user
 
+
 @router.get("/{user_id}", response_model=UsersResponseSchema)
 def get_user(
-    user_id: int, 
-    user = Security(token_decode,scopes=["admin"]),
-    db: Session = Depends(get_session)):
+        user_id: int,
+        user=Security(token_decode, scopes=["admin"]),
+        db: Session = Depends(get_session)):
     logger.info(f"Getting user with ID: {user_id}")
-    
+
     statement = select(Users).where(
         Users.id == user_id,
         Users.is_active == True,
-        )
+    )
     result = db.exec(statement)
     db_user = result.first()
     logger.info(f"Getting user data: {db_user}")
@@ -103,9 +105,9 @@ def get_user(
 
 @router.get("/", response_model=list[UsersResponseSchema])
 def get_users(
-        user = Security(token_decode,scopes=["admin"]),
-        db: Session = Depends(get_session)
-    ):
+    user=Security(token_decode, scopes=["admin"]),
+    db: Session = Depends(get_session)
+):
     statement = select(Users).where(Users.is_active == True)
     result = db.exec(statement)
     db_users = result.all()
@@ -114,10 +116,10 @@ def get_users(
 
 @router.patch("/{user_id}", response_model=UsersResponseSchema)
 def update_user(
-    user_id: int,
-    user_data: UserUpdateSchema, 
-    user = Security(token_decode,scopes=["admin"]),
-    db: Session = Depends(get_session)):
+        user_id: int,
+        user_data: UserUpdateSchema,
+        user=Security(token_decode, scopes=["admin"]),
+        db: Session = Depends(get_session)):
     statement = select(Users).where(Users.id == user_id)
     result = db.exec(statement)
     db_user = result.first()
@@ -137,9 +139,9 @@ def update_user(
 @router.delete("/{user_id}")
 def delete_user(
     user_id: int,
-    user = Security(token_decode,scopes=["admin"]),
+    user=Security(token_decode, scopes=["admin"]),
     db: Session = Depends(get_session)
-    ):
+):
     statement = select(Users).where(Users.id == user_id)
     result = db.exec(statement)
     db_user = result.first()
@@ -150,4 +152,3 @@ def delete_user(
     db.delete(db_user)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
-

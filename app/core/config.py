@@ -26,4 +26,3 @@ with open("./version.txt", "r") as file:
     PROJECT_VERSION = file.read().strip()
 
 CORS_ORIGINS: list[str] = ["*"]
-

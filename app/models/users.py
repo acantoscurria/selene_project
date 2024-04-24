@@ -10,8 +10,6 @@ from app.models.global_mixins.timestamp_mixins import TimeStampMixin
 from app.models.invites import Invites
 
 
-
-
 class Gender(str, Enum):
     MALE = "male"
     FEMALE = "female"
@@ -19,7 +17,7 @@ class Gender(str, Enum):
 
 class Users(TimeStampMixin, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    email: str = Field(max_length=255,unique=True)
+    email: str = Field(max_length=255, unique=True)
     password: str = Field(max_length=255)
     is_active: bool = Field(default=True)
     is_admin: bool = Field(default=False)
@@ -35,8 +33,6 @@ class Users(TimeStampMixin, table=True):
 
     async def __admin_repr__(self, request: Request):
         return f"{self.email}"
-    
+
     async def __admin_select2_repr__(self, request: Request) -> str:
         return f'<div><span>{self.email}</span></div>'
-
-

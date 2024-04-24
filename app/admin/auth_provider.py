@@ -1,6 +1,6 @@
 
 from fastapi import Depends
-from sqlmodel import Session, create_engine,select
+from sqlmodel import Session, create_engine, select
 from starlette.requests import Request
 from starlette.responses import Response
 from starlette_admin.auth import AdminConfig, AdminUser, AuthProvider
@@ -12,7 +12,6 @@ from app.core.database import get_session
 from app.models.users import Users
 
 
-
 class UsernameAndPasswordProvider(AuthProvider):
 
     async def login(
@@ -22,9 +21,8 @@ class UsernameAndPasswordProvider(AuthProvider):
         remember_me: bool,
         request: Request,
         response: Response,
-       
     ) -> Response:
-        engine = create_engine(DATABASE_URL, echo=True) #, echo=True)
+        engine = create_engine(DATABASE_URL, echo=True)  # , echo=True)
 
         with Session(engine) as session:
             statement = select(Users).where(Users.email == username)
@@ -32,7 +30,6 @@ class UsernameAndPasswordProvider(AuthProvider):
 
         if not user_db:
             raise LoginFailed("Usuario y/o contraseña incorrectos.")
-        
 
         if not user_db.is_admin:
             raise LoginFailed("No tienes permiso para ingresar a este sitio")
@@ -43,7 +40,7 @@ class UsernameAndPasswordProvider(AuthProvider):
                 "username": user_db.email,
                 "name": user_db.email,
                 "is_admin": user_db.is_admin
-                })
+            })
             return response
 
         raise LoginFailed("Invalid username or password")

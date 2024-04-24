@@ -22,11 +22,10 @@ class Invites(TimeStampMixin, table=True):
     address: Optional[str] = Field(max_length=255)
     photo: Optional[str] = Field(max_length=255)
 
-
     user:  Optional["Users"] = Relationship(back_populates="invite")
 
     async def __admin_repr__(self, request: Request):
         return f"{self.name} {self.last_name}"
-    
+
     async def __admin_select2_repr__(self, request: Request) -> str:
         return f'<div><span>{self.name} {self.last_name}</span></div>'
