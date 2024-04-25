@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 os.environ.clear()
 load_dotenv()
 
-DEBUG = os.getenv("DEBUG", default=True)
+DEBUG = os.getenv("DEBUG", default=False)
 
 if DEBUG:
     PROJECT_URL = os.getenv("PROJECT_URL", default="http://localhost:8000")
