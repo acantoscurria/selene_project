@@ -38,20 +38,24 @@ pip freeze > requirements.txt
 # Ejecutar local
 
 ```sh
-uvicorn app.main:app --port 80 --reload
+uvicorn app.main:app --port 8000 --reload
 ```
 
 # Ejecutar con logs nivel INFO
-
 ```sh
-uvicorn app.main:app --log-level info
+uvicorn app.main:app --port 8000 --log-level info
+```
+
+# Ejecutar con logs nivel ERROR
+```sh
+uvicorn app.main:app --port 8000 --log-level error
 ```
 
 #### Migraciones ####
 
 Crear carpeta "versions" en la ruta ./alembic/
 
-## Comando para generar migraciones cuando se crean o modifican modelos 
+## Comando para generar migraciones cuando se crean o modifican modelos
 
 ```sh
 alembic revision --autogenerate -m "init"
@@ -79,7 +83,7 @@ alembic downgrade <revision_id>
 alembic downgrade base
 ```
 
-# Pip update 
+# Pip update
 
 ```sh
 pur -r requirements.txt -o updates.txt > update.txt

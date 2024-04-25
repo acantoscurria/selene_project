@@ -219,7 +219,5 @@ $RECYCLE.BIN/
 
 
 # ###### Custom #####
-/app/static/*
-!/app/static/styles.css
 *.xlsx
 *.xls

@@ -8,15 +8,16 @@ load_dotenv()
 DEBUG = os.getenv("DEBUG", default=True)
 
 if DEBUG:
-    PROJECT_URL = "http://localhost:8000"
+    PROJECT_URL = os.getenv("PROJECT_URL", default="http://localhost:8000")
 else:
     PROJECT_URL: str = os.getenv("PROJECT_URL")
 
 STATIC_DIRECTORY = os.getcwd() + "/app/static"
+TEMPLATES_DIRECTORY = os.getcwd() + "/app/templates"
 MEDIA_ADMIN_DIRECTORY = os.getcwd() + "/app/admin/media"
 DEBUG = os.getenv("DEBUG", default=True)
 DATABASE_URL = os.getenv("DATABASE_URL")
-PROJECT_NAME: str = "Mis Quince - Selene"
+PROJECT_NAME: str = os.getenv("PROJECT_NAME", default="Mis Quince - Selene")
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
